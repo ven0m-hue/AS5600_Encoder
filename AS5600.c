@@ -8,6 +8,23 @@
 
 #include "AS5600.h"
 
+#ifndef __RADIUS 
+#define __RADIUS  1.00 /* Defined in centi-meters*/
+#endif
+
+
+#ifndef __PI
+#define __PI  3.14 /* Defined in centi-meters*/
+#endif
+
+/*
+ * Private variables  
+*/
+int16_t Length = 0;
+uint16_t CurrRead = 0;
+uint16_t LastRead = 0;
+int16_t rev = 0;
+
 
 uint8_t AS5600_Init(AS5600_Handle_t *hAS56)
 {
@@ -109,6 +126,52 @@ uint8_t AS5600_GetScaledAngle(AS5600_Handle_t* hAS56)
 
 	return ret;
 }
+
+
+uint8_t AS5600_GetRawADC(AS5600_Handle_t* hAS56)
+{
+	const AS5600_OpRegister_t angleReg = AS5600_REGISTER_RAWANGLE_H;
+	AS5600_OpStatus_t ret = AS5600_ERROR;
+
+	uint8_t raw[2] = {0};
+
+	if((hAS56->I2Chandle == NULL)) return ret;
+
+		//readByte(hAS56->I2Chandle, Address, subAddress);
+	if(readMem(hAS56->I2Chandle, WHOAMI, angleReg, raw) != AS55600_SUCCESS) return ret;
+
+	else ret = AS55600_SUCCESS;
+
+	hAS56->rawAngle = ((uint16_t)((uint16_t)raw[0] << 8 | raw[1]));
+
+	return ret;
+}
+
+
+int16_t AS5600_GetLength(uint16_t rawAngle)
+{
+	
+	AS5600_GetRawADC(&as5600);
+
+	CurrRead = as5600.rawAngle;
+
+	if((LastRead - CurrRead)  > 2047) rev ++;   /*10 bit resolutions*/
+
+	if((LastRead - CurrRead)  < -2047) rev --;
+
+	LastRead = CurrRead;
+
+	Length = (2 * __PI * __RADIUS * (rev)) * 0.01;   //Converting centi to meters
+	
+	return Length;
+
+}
+
+
+
+/*
+* HELPER FUNCTIONS
+*/
 
 uint8_t writeByte(I2C_HandleTypeDef *I2Chandle, uint8_t Address, uint8_t subAddress, uint8_t data)
 {
