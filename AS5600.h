@@ -39,6 +39,8 @@ uint8_t AS5600_GetRawAngle(AS5600_Handle_t* hAS56);
 uint8_t AS5600_GetScaledAngle(AS5600_Handle_t* hAS56);
 
 uint8_t AS5600_GetRawAngleIT(AS5600_Handle_t* hAS56);
+uint8_t AS5600_GetRawADC(AS5600_Handle_t* hAS56);
+int16_t AS5600_GetLength(uint16_t rawAngle);
 
 /*
  * Helper Functions
