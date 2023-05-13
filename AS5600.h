@@ -2,7 +2,7 @@
  * AS5600.h
  *
  *  Created on: 11-Oct-2022
- *      Author: Venom
+ *      Author: venom
  */
 
 #ifndef INC_AS5600_H_
@@ -19,7 +19,8 @@ typedef struct
 	I2C_HandleTypeDef *I2Chandle;
 
 	uint16_t sacledAngle;
-	float rawAngle;
+	
+	uint16_t rawAngle;
 
 	float rotation;
 
@@ -39,8 +40,6 @@ uint8_t AS5600_GetRawAngle(AS5600_Handle_t* hAS56);
 uint8_t AS5600_GetScaledAngle(AS5600_Handle_t* hAS56);
 
 uint8_t AS5600_GetRawAngleIT(AS5600_Handle_t* hAS56);
-uint8_t AS5600_GetRawADC(AS5600_Handle_t* hAS56);
-int16_t AS5600_GetLength(uint16_t rawAngle);
 
 /*
  * Helper Functions
@@ -48,7 +47,7 @@ int16_t AS5600_GetLength(uint16_t rawAngle);
 uint8_t writeByte(I2C_HandleTypeDef *I2Chandle, uint8_t Address, uint8_t subAddress, uint8_t data);
 uint8_t readByte(I2C_HandleTypeDef *I2Chandle, uint8_t Address, uint8_t subAddress);
 
-uint8_t writeMem(I2C_HandleTypeDef *I2Chandle, uint8_t Address, uint8_t subAddress, uint8_t data);
+uint8_t writeMem(I2C_HandleTypeDef *I2Chandle, uint8_t Address, uint8_t subAddress, uint8_t* data);
 uint8_t readMem(I2C_HandleTypeDef *I2Chandle, uint8_t Address, uint8_t subAddress, uint8_t* raw);
 
 uint8_t writeMemIT(I2C_HandleTypeDef *I2Chandle, uint8_t Address, uint8_t subAddress, uint8_t data);
